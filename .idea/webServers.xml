@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="15c252f4-c4b8-44b1-8f9d-6341f1c3fb94" name="m2-vv-ll">
+        <fileTransfer rootFolder="/media/vv/50076661-58e8-4bb5-a6e1-04e6d2a043b0/LYQ" accessType="SFTP" host="192.168.194.222" port="22" sshConfigId="cf02e1cb-3a4a-4f68-bf3f-3a239f1de1b2" sshConfig="vv@192.168.194.222:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="c093ff74-c107-48df-afbd-62e26a01e07f" name="m2-qwq-zhang">
+        <fileTransfer accessType="SFTP" host="10.3.77.76" port="22" sshConfigId="e2e5b402-2d2a-42af-814b-595655490a5e" sshConfig="zhang@10.3.77.76:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

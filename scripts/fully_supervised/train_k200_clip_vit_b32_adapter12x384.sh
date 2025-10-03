@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+now=$(date +"%Y%m%d_%H%M%S")
+base_dir=YOUR_PATH
+dataset=k200
+run_id=60
+output_dir=${base_dir}/output_dir/${dataset}
+mkdir -p ${output_dir}
+
+CUDA_VISIBLE_DEVICES="0" python -m torch.distributed.launch --nproc_per_node 1 --master_port 47708 \
+    ${base_dir}/main.py \
+    --model clip_vit_base_patch32_multimodal_adapter12x384 \
+    --save_dir ${output_dir} \
+    --auto_resume \
+    --auto_remove \
+    --dataset k200 \
+    --num_frames 8 \
+    --sampling_rate 16 \
+    --resize_type random_short_side_scale_jitter \
+    --scale_range 1.0 1.15 \
+    --num_spatial_views 4 \
+    --num_temporal_views 3 \
+    --label_csv "caption/k200/k200_labels.csv" \
+    --mlm_label "lables/k400_mlm_lables.txt" \
+    --mirror \
+    --batch_size 64 \
+    --epochs 15 \
+    --warmup_epochs 2 \
+    --eval_freq 15 \
+    --print_freq 100 \
+    --num_workers 16 \
+    --lr 0.0003125 \
+    --mlm 1 \
+    2>&1 | tee ${output_dir}/${now}.log

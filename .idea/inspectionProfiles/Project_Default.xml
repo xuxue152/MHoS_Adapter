@@ -1,0 +1,56 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="42">
+            <item index="0" class="java.lang.String" itemvalue="diffusers" />
+            <item index="1" class="java.lang.String" itemvalue="huggingface-hub" />
+            <item index="2" class="java.lang.String" itemvalue="bitsandbytes" />
+            <item index="3" class="java.lang.String" itemvalue="TEST.NUM_CLIP" />
+            <item index="4" class="java.lang.String" itemvalue="TEST.NUM_CROP" />
+            <item index="5" class="java.lang.String" itemvalue="3" />
+            <item index="6" class="java.lang.String" itemvalue="4" />
+            <item index="7" class="java.lang.String" itemvalue="321321" />
+            <item index="8" class="java.lang.String" itemvalue="oyaml" />
+            <item index="9" class="java.lang.String" itemvalue="gradio" />
+            <item index="10" class="java.lang.String" itemvalue="lycoris-lora" />
+            <item index="11" class="java.lang.String" itemvalue="python-dotenv" />
+            <item index="12" class="java.lang.String" itemvalue="optimum-quanto" />
+            <item index="13" class="java.lang.String" itemvalue="python-slugify" />
+            <item index="14" class="java.lang.String" itemvalue="torchvision" />
+            <item index="15" class="java.lang.String" itemvalue="lpips" />
+            <item index="16" class="java.lang.String" itemvalue="kornia" />
+            <item index="17" class="java.lang.String" itemvalue="albucore" />
+            <item index="18" class="java.lang.String" itemvalue="pytorch_fid" />
+            <item index="19" class="java.lang.String" itemvalue="safetensors" />
+            <item index="20" class="java.lang.String" itemvalue="sentencepiece" />
+            <item index="21" class="java.lang.String" itemvalue="accelerate" />
+            <item index="22" class="java.lang.String" itemvalue="flatten_json" />
+            <item index="23" class="java.lang.String" itemvalue="huggingface_hub" />
+            <item index="24" class="java.lang.String" itemvalue="transformers" />
+            <item index="25" class="java.lang.String" itemvalue="pydantic" />
+            <item index="26" class="java.lang.String" itemvalue="timm" />
+            <item index="27" class="java.lang.String" itemvalue="k-diffusion" />
+            <item index="28" class="java.lang.String" itemvalue="controlnet_aux" />
+            <item index="29" class="java.lang.String" itemvalue="hf_transfer" />
+            <item index="30" class="java.lang.String" itemvalue="torch" />
+            <item index="31" class="java.lang.String" itemvalue="toml" />
+            <item index="32" class="java.lang.String" itemvalue="omegaconf" />
+            <item index="33" class="java.lang.String" itemvalue="pyyaml" />
+            <item index="34" class="java.lang.String" itemvalue="albumentations" />
+            <item index="35" class="java.lang.String" itemvalue="prodigyopt" />
+            <item index="36" class="java.lang.String" itemvalue="tensorboard" />
+            <item index="37" class="java.lang.String" itemvalue="peft" />
+            <item index="38" class="java.lang.String" itemvalue="invisible-watermark" />
+            <item index="39" class="java.lang.String" itemvalue="einops" />
+            <item index="40" class="java.lang.String" itemvalue="open_clip_torch" />
+            <item index="41" class="java.lang.String" itemvalue="opencv-python" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
