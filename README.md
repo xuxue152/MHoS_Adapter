@@ -1,7 +1,7 @@
 # MHoS-Adapter: Multimodal Higher-Order Statistical Adapter For Video Action Recognition
 
 ## Overview
-<img src="MHoS.pdf" alt="MHoS-Adapter Architecture" width="600" height="500">
+<img src="MHoS.jpg" alt="MHoS-Adapter Architecture" width="450" height="500">
 
 This is the official PyTorch implementation of **MHoS-Adapter**, a novel parameter-efficient framework for adapting CLIP to video action recognition. Our method introduces higher-order statistical modeling to capture fine-grained discriminative features that are crucial for distinguishing visually similar actions.
 
