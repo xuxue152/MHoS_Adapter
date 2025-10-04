@@ -1,17 +1,18 @@
-# This is an official pytorch implementation of ActionCLIP: A New Paradigm for Video Action Recognition 
+# MHoS-Adapter: Multimodal Higher-Order Statistical Adapter For Video Action Recognition
 
 ## Overview
-<img src="fusion.png" alt="MBGF架构" width="600" height="500">
+<img src="MHoS.pdf" alt="MHoS-Adapter Architecture" width="600" height="500">
 
+This is the official PyTorch implementation of **MHoS-Adapter**, a novel parameter-efficient framework for adapting CLIP to video action recognition. Our method introduces higher-order statistical modeling to capture fine-grained discriminative features that are crucial for distinguishing visually similar actions.
 
 ## Content
-- [Environment Setup](#set_environment)
+- [Environment Setup](#environment-setup)
 - [Data Preparation](#data-preparation)
-- [Model Zoo](#experiment_results )
+- [Model Zoo](#model-zoo)
 - [Testing](#testing)
 - [Training](#training)
-- [Citing MBGF](#Citing_MBGF)
-- [Acknowledgments](#Acknowledgments)
+- [Citing MHoS-Adapter](#citing-mhos-adapter)
+- [Acknowledgments](#acknowledgments)
 
 ## Environment Setup
 
@@ -67,97 +68,113 @@ The `id` indicates the class id, while the `name` denotes the text description.
 ## Model Zoo
 
 For evaluation, we provide the checkpoints of our models in the following tables.  
-Our proposed **MBGF** module consistently improves CLIP-based backbones across different datasets and training settings.  
+Our proposed **MHoS-Adapter** consistently improves CLIP-based backbones across different datasets and training settings with parameter-efficient fine-tuning.  
 
 ---
 
 ### Fully-supervised on Kinetics-400
 
-| Model | FLOPs(G) | Input | Top-1 Acc.(%) |
-|--|--|--|--|
-| CLIP-B/32 | 34 | 8×224 | 78.2 |
-| CLIP-B/32+MBGF | 36 | 8×224 | **79.2 (+1.0)** |
-| CLIP-B/32 | 72 | 16×224 | 80.1 |
-| CLIP-B/32+MBGF | 72 | 16×224 | **80.1 (↔)** |
-| CLIP-B/16 | 139 | 8×224 | 82.2 |
-| CLIP-B/16+MBGF | 142 | 8×224 | **82.9 (+0.7)** |
-| ActionCLIP-B/16 | 563 | 32×224 | 83.8 |
-| ActionCLIP-B/16+MBGF | 145 | 8×224 | **83.8 (↔ with 4× less FLOPs)** |
+| Model | Pre-training | Tunable Param (M) | Frames×Crops×Clips | Top-1 (%) | Top-5 (%) | GFLOPs |
+|--|--|--|--|--|--|--|
+| **Full Finetuning** |
+| Swin-B | IN-21k | 88 | 32×4×3 | 82.7 | 95.5 | 282 |
+| MViTv2-B | × | 52 | 32×5×1 | 82.9 | 95.7 | 225 |
+| ActionCLIP-B/16 | CLIP-400M | 142 | 32×10×3 | 83.8 | 96.2 | 563 |
+| X-CLIP-B/16 | CLIP-400M | 132 | 16×4×3 | 84.7 | 96.8 | 287 |
+| BIKE-L/14 | CLIP-400M | 230 | 16×4×3 | **88.1** | **97.9** | 830 |
+| **PEFT: multimodal (frozen CLIP)** |
+| Vita-CLIP-B/16 | CLIP-400M | 39 | 8×4×3 | 81.8 | 96.0 | 97 |
+| M2-CLIP-B/16 | CLIP-400M | 16 | 8×4×3 | 82.6 | 95.9 | 127 |
+| **MHoS-Adapter (Ours)** | CLIP-400M | 19 | 8×4×3 | **83.2** | **96.2** | 117 |
 
-MBGF improves CLIP-B/16 and CLIP-B/32, while enabling ActionCLIP to achieve the same accuracy with much lower computational cost.  
+MHoS-Adapter achieves state-of-the-art performance among PEFT methods with only 19M trainable parameters, comparable to fully fine-tuned models while being much more efficient.
 
 ---
 
-### Transfer to UCF101 and HMDB51
+### Zero-Shot Transfer to HMDB51 and UCF101
 
-| Model | Frame | UCF101 | HMDB51 |
+| Method | HMDB51 (%) | UCF101 (%) | CLIP FT |
 |--|--|--|--|
-| CLIP-B/16 | 8 | 96.5 | 68.9 |
-| CLIP-B/16+MBGF | 8 | **97.5 (+1.0)** | **74.4 (+5.5)** |
-| ActionCLIP-B/16 | 32 | 97.1 | **76.2** |
-| ActionCLIP-B/16+MBGF | 8 | **97.5 (+0.4)** | 73.6 (↓ -2.6) |
-| X-CLIP-B/16 | 8 | 97.4 | 75.6 |
+| ActionCLIP | 40.8±5.4 | 58.3±3.4 | ✓ |
+| X-CLIP-B/16 | 44.6±5.2 | 72.0±2.3 | ✓ |
+| CoOp | - | 66.6 | × |
+| **MHoS-Adapter (Ours)** | **50.4** | **69.2** | × |
 
-On UCF101, MBGF consistently improves both CLIP and ActionCLIP.  
-On HMDB51, MBGF provides +5.5% gain for CLIP-B/16.  
+MHoS-Adapter demonstrates strong zero-shot generalization capabilities, outperforming fully fine-tuned methods on HMDB51 without any target dataset training.
 
 ---
 
 ### Few-shot on HMDB51
 
-| Model | Frame | Q=2 | Q=4 | Q=8 | Q=16 |
-|--|--|--|--|--|--|
-| CLIP-B/16 | 8 | 46.3 | 52.9 | 57.6 | 62.4 |
-| CLIP-B/16+MBGF | 8 | **48.7 (+2.4)** | **53.6 (+0.7)** | **60.0 (+2.4)** | **65.0 (+2.6)** |
-| ActionCLIP-B/16 | 8 | 43.7 | 51.2 | 55.6 | 64.2 |
-| ActionCLIP-B/16+MBGF | 8 | 43.5 (↔) | 49.3 (↓ -1.9) | 56.2 (+0.6) | 62.4 (↓ -1.8) |
-| X-CLIP-B/16 | 32 | **53.0** | **57.3** | **62.8** | 64.0 |
-
-MBGF brings consistent boosts for CLIP-B/16 across all shots, especially Q=16 (+2.6%).  
+| Method | Frame | K=2 | K=4 | K=8 | K=16 | CLIP FT |
+|--|--|--|--|--|--|--|
+| PromptCLIP A5 | 16 | 39.7 | 50.7 | 56.0 | 62.4 | × |
+| ActionCLIP-B/16 | 8 | 43.7 | 51.2 | 55.6 | 64.2 | ✓ |
+| X-CLIP-B/16 | 32 | **53.0** | **57.3** | 62.8 | 64.0 | ✓ |
+| CLIP-B/16 | 8 | 46.3 | 52.9 | 57.6 | 62.4 | × |
+| **MHoS-Adapter (Ours)** | 8 | 49.08 | 53.86 | **63.33** | **67.84** | × |
 
 ---
 
 ### Few-shot on UCF101
 
-| Model | Frame | Q=2 | Q=4 | Q=8 | Q=16 |
-|--|--|--|--|--|--|
-| CLIP-B/16 | 8 | 73.5 | 78.6 | 83.5 | 88.4 |
-| CLIP-B/16+MBGF | 8 | **78.0 (+4.5)** | **82.7 (+4.1)** | **87.4 (+3.9)** | **91.8 (+3.4)** |
-| ActionCLIP-B/16 | 8 | 73.7 | 80.2 | 86.3 | 89.8 |
-| ActionCLIP-B/16+MBGF | 8 | 73.7 (↔) | 80.7 (+0.5) | **87.2 (+0.9)** | **92.0 (+2.2)** |
-| X-CLIP-B/16 | 32 | **76.4** | **83.4** | **88.3** | 91.4 |
+| Method | Frame | K=2 | K=4 | K=8 | K=16 | CLIP FT |
+|--|--|--|--|--|--|--|
+| PromptCLIP A5 | 16 | 71.4 | 79.9 | 85.7 | 89.9 | × |
+| ActionCLIP-B/16 | 8 | 73.7 | 80.2 | 86.3 | 89.8 | ✓ |
+| X-CLIP-B/16 | 32 | **76.4** | **83.4** | 88.3 | 91.4 | ✓ |
+| CLIP-B/16 | 8 | 73.5 | 78.6 | 83.5 | 88.4 | × |
+| **MHoS-Adapter (Ours)** | 8 | 74.38 | 85.17 | **93.29** | **96.78** | × |
 
-On UCF101 few-shot, MBGF provides large improvements for CLIP-B/16 (+3–5%), and enhances ActionCLIP in higher-shot settings.  
+MHoS-Adapter demonstrates exceptional few-shot learning capabilities, achieving up to +5.8% improvement on HMDB51 (K=16) and +5.4% on UCF101 (K=16) compared to X-CLIP.
 
 ---
 
 **Summary**  
-- CLIP-B/16 + MBGF achieves consistent performance gains across Kinetics-400, UCF101, and HMDB51, especially in few-shot scenarios.  
-- ActionCLIP-B/16 + MBGF reduces FLOPs dramatically on Kinetics-400 while preserving accuracy.  
-- MBGF is lightweight, general, and effective across supervised and transfer learning benchmarks.  
+- MHoS-Adapter achieves 83.2% Top-1 accuracy on Kinetics-400 with only 19M trainable parameters, setting a new benchmark among PEFT methods.  
+- The higher-order statistical modeling enables superior few-shot performance, especially in higher-shot settings (K=8, K=16).  
+- Our method demonstrates strong zero-shot generalization capabilities, outperforming fully fine-tuned methods on HMDB51.  
 
 
 ## Testing 
-To test the downloaded pretrained models on Kinetics or HMDB51 or UCF101, you can run `scripts/run_test.sh`. For example:
-```
-# test
-bash scripts/k400_test.sh
+To test the downloaded pretrained models on Kinetics, HMDB51, or UCF101, you can run the corresponding test scripts. For example:
+```bash
+# test on Kinetics-400
+bash scripts/fully_supervised/train_k400_clip_vit_b16_adapter12x384.sh
 
+# zero-shot testing
+bash scripts/zero-shot/zero_shot_hmdb51.sh
+bash scripts/zero-shot/zero_shot_ucf101.sh
+
+# few-shot testing
+bash scripts/few_shot/few_shot_hmdb51.sh
+bash scripts/few_shot/few_shot_ucf101.sh
 ```
 
 ## Training
-We provided several examples to train ActionCLIP  with this repo:
-- To train on Kinetics from CLIP pretrained models, you can run:
+We provide several training examples for MHoS-Adapter:
+- To train on Kinetics-400 from CLIP pretrained models:
+```bash
+# train on Kinetics-400
+bash scripts/fully_supervised/train_k400_clip_vit_b16_adapter12x384.sh
 
+# train on Mini Kinetics-200
+bash scripts/fully_supervised/train_k200_clip_vit_b32_adapter12x384.sh
 ```
-# train 
-bash scripts/k400_train.sh
+
+More training details can be found in the respective script files.
+
+## Citing MHoS-Adapter
+If you find MHoS-Adapter useful in your research, please cite our paper:
+
+```bibtex
+@article{zhang2025multimodal,
+  title={Multimodal Higher-Order Statistical Adapter For Video Action Recognition},
+  author={Zhang, Bingbing and Li, Yongqi and Li, Meng and Zhang, Jianxin and Zhang, Kiang},
+  journal={Nuclear Physics B},
+  year={2025}
+}
 ```
-More training details, you can find sepcify through the script 
 
-
-## Citing MBGF
-If you find MBGF useful in your research, please cite our paper.
-
-# Acknowledgments
-Our code is based on [CLIP](https://github.com/openai/CLIP) and [XCLIP](https://github.com/microsoft/VideoX)
+## Acknowledgments
+Our code is based on [CLIP](https://github.com/openai/CLIP) and [XCLIP](https://github.com/microsoft/VideoX).
